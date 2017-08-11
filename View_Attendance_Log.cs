@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace WindowsFormsApplication1
+{
+    public partial class View_Attendance_Log : Form
+    {
+        public View_Attendance_Log()
+        {
+            InitializeComponent();
+        }
+
+        void load_table()
+        {
+            String ConString = "datasource=localhost;port=3306;username=root;password='' ";
+            MySqlConnection conDataBase = new MySqlConnection(ConString);
+            MySqlCommand cmdDatabase = new MySqlCommand("select * from school_management.attendance_table; ", conDataBase);
+            try
+            {
+                MySqlDataAdapter sda = new MySqlDataAdapter();
+                sda.SelectCommand = cmdDatabase;
+                DataTable dbdataset = new DataTable();
+                sda.Fill(dbdataset);
+                BindingSource bSource = new BindingSource();
+
+                bSource.DataSource = dbdataset;
+                dataGridView1.DataSource = bSource;
+                sda.Update(dbdataset);
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void View_Attendance_Log_Load(object sender, EventArgs e)
+        {
+            load_table();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.Hide();
+            Admin_Welcome_Formcs af = new Admin_Welcome_Formcs();
+            af.Show();
+        }
+    }
+}
